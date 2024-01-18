@@ -37,3 +37,36 @@ curl -X POST \
 
 Look for 'blobGasUsed' - this shows that some blobs were included in this block.
 
+
+### pushing the yul code
+
+Compilation:
+```
+~/.svm/0.8.19/solc-0.8.19 --assemble  yul/BlobVersionedHash.yul --bin  | tail -1
+```
+
+Then pushing with cast:
+
+```
+cast send -r $RPC_URL --private-key $PRIVATE_KEY --create 0x600e600d600039600e6000f3fe60003580498060005260206000f3
+```
+
+Got contract:
+https://goerli.etherscan.io/address/0xc7dc9939df92e91b6f23b8367771d918b034d108#code
+
+
+
+### Experiment 1
+
+Deploy a 'counter' contract to Goerli with 'incrementByBlob' - that sets the number to the versioned hash of the blob that was included.
+
+Contract was deployed on Goerli on: 0xC7319491f629b64B7566b09F3369C6A0A5713F61
+
+And this was the transaction with blob: https://goerli.etherscan.io/tx/0x2bae93157ea260f5217bf8a30ba1479871c1be9f9dbaf773b915be0474075323
+
+
+This was used to send the tx
+
+```
+./blob-utils tx --blob-file somedata.txt --rpc-url $RPC_URL --to 0xC7319491f629b64B7566b09F3369C6A0A5713F61 --private-key $PRIVATE_KEY --gas-limit 100000  --calldata 0xa30753db --chain-id 5 --gas-price 2000000000
+```
